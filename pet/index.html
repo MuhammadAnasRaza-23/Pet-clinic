@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PawCare Veterinary Clinic</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --warm-bg-start: #FFFFFF;
+    --warm-bg-mid:   #FAFAFC;
+    --warm-bg-end:   #F3F4F8;
+    
+    --orange-primary:#E65100;
+    --orange-hover:  #D84315;
+    --orange-light:  #FF7E5F;
+    --peach-light:   #FFE6D8;
+    --terracotta:    #5C1D06;
+    
+    --text-dark:     #2D1810;
+    --text-muted:    #5F6B7A;
+    --white:         #FFFFFF;
+    --radius:        20px;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #FFFFFF;
+    background-image: 
+      radial-gradient(at 15% 15%, rgba(240, 242, 247, 0.7) 0px, transparent 40%),
+      radial-gradient(at 85% 25%, rgba(245, 240, 243, 0.6) 0px, transparent 40%),
+      radial-gradient(at 50% 60%, rgba(255, 255, 255, 1) 0px, transparent 60%),
+      radial-gradient(at 25% 85%, rgba(240, 244, 248, 0.6) 0px, transparent 40%),
+      linear-gradient(180deg, #FFFFFF 0%, #FAFAFC 50%, #F4F5F8 100%);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  button, .btn-primary, .btn-outline, .nav-cta, .form-submit, .btn-white {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    z-index: 1;
+    border: none;
+    font-weight: 700;
+  }
+
+  button::before, .btn-primary::before, .btn-outline::before, .nav-cta::before, .form-submit::before, .btn-white::before {
+    content: '🐾';
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.4) rotate(-20deg);
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+  }
+
+  button::after, .btn-primary::after, .btn-outline::after, .nav-cta::after, .form-submit::after, .btn-white::after {
+    content: '🐾';
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%) scale(0.4) rotate(20deg);
+    font-size: 1.2rem;
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+  }
+
+  button:hover, .btn-primary:hover, .btn-outline:hover, .nav-cta:hover, .form-submit:hover, .btn-white:hover {
+    background: linear-gradient(135deg, #D84315 0%, #E65100 100%) !important;
+    color: #FFFFFF !important;
+    border-color: #D84315 !important;
+    padding-left: 44px !important;
+    padding-right: 44px !important;
+    border-radius: 30px !important;
+    box-shadow: 0 12px 25px rgba(216, 67, 21, 0.35) !important;
+    transform: translateY(-3px) scale(1.05) !important;
+  }
+
+  button:hover::before, .btn-primary:hover::before, .btn-outline:hover::before, .nav-cta:hover::before, .form-submit:hover::before, .btn-white:hover::before {
+    left: 14px;
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1) rotate(0deg);
+  }
+
+  button:hover::after, .btn-primary:hover::after, .btn-outline:hover::after, .nav-cta:hover::after, .form-submit:hover::after, .btn-white:hover::after {
+    right: 14px;
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1) rotate(0deg);
+  }
+
+  /* Header Light Orange Theme */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 6%;
+    background: linear-gradient(135deg, #FFF4EC 0%, #FFE6D8 50%, #FFDAC8 100%);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px solid #FFCBB5;
+    box-shadow: 0 4px 20px rgba(216, 67, 21, 0.12);
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 42px; height: 42px;
+    background: #E65100;
+    color: #FFFFFF;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(230, 81, 0, 0.25);
+    animation: bounceSlow 3s infinite ease-in-out;
+  }
+  @keyframes bounceSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+  .logo-text { font-family: 'Playfair Display', serif; color: #5C1D06; font-size: 1.4rem; font-weight: 800; text-shadow: 0 1px 2px rgba(255,255,255,0.8); }
+  .nav-links { display: flex; gap: 32px; list-style: none; margin-bottom: 0; }
+  .nav-links a { color: #5C230C; text-decoration: none; font-size: 0.95rem; font-weight: 700; transition: all 0.2s; }
+  .nav-links a:hover { color: #E65100; text-shadow: 0 0 8px rgba(230,81,0,0.2); transform: translateY(-1px); }
+  .nav-cta { background: linear-gradient(135deg, #E65100, #D84315); color: #FFFFFF; padding: 10px 24px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; box-shadow: 0 4px 14px rgba(230,81,0,0.3); }
+
+  /* Hero Section Light Orange Matching Theme */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 120px 6% 80px; gap: 60px; position: relative; overflow: hidden;
+  }
+  .hero-carousel-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
+  }
+  .hero-carousel-bg .carousel,
+  .hero-carousel-bg .carousel-inner,
+  .hero-carousel-bg .carousel-item {
+    width: 100%; height: 100%;
+  }
+  .hero-carousel-bg img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .hero-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(255, 246, 240, 0.92) 0%, rgba(255, 233, 219, 0.88) 50%, rgba(255, 222, 204, 0.92) 100%);
+    z-index: 1;
+  }
+  .hero-content { flex: 1; z-index: 2; }
+  .live-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(230, 81, 0, 0.08); border: 1.5px solid rgba(230, 81, 0, 0.25);
+    color: #8C2B08; padding: 8px 18px; border-radius: 25px;
+    font-size: 0.85rem; font-weight: 700; margin-bottom: 28px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+  }
+  .live-dot {
+    width: 10px; height: 10px; background: #E65100; border-radius: 50%;
+    box-shadow: 0 0 10px #E65100;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.4); }
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 5.5vw, 4.2rem);
+    color: #2D1810; line-height: 1.15; margin-bottom: 22px; font-weight: 800;
+  }
+  .hero h1 em { color: #E65100; font-style: normal; text-shadow: 0 2px 8px rgba(230,81,0,0.15); }
+  .hero p { color: #5A3E36; font-size: 1.15rem; line-height: 1.7; max-width: 500px; margin-bottom: 36px; font-weight: 500; }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary { background: linear-gradient(135deg, #E65100 0%, #D84315 100%); color: #FFFFFF; padding: 14px 30px; border-radius: 12px; font-size: 1rem; font-weight: 700; box-shadow: 0 6px 20px rgba(230,81,0,0.3); }
+  .btn-outline { background: rgba(255,255,255,0.85); color: #E65100; border: 2px solid #E65100; padding: 14px 30px; border-radius: 12px; font-size: 1rem; font-weight: 700; backdrop-filter: blur(5px); }
+
+  .hero-card {
+    flex: 0 0 350px; z-index: 2;
+    background: rgba(255, 255, 255, 0.92); border: 1.5px solid #FFCBB5;
+    backdrop-filter: blur(20px); border-radius: 24px; padding: 32px; color: #2D1810;
+    box-shadow: 0 20px 40px rgba(216,67,21,0.08);
+  }
+  .hero-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 20px; color: #E65100; text-transform: uppercase; letter-spacing: 0.05em; }
+  .hours-list { list-style: none; display: flex; flex-direction: column; gap: 14px; padding-left: 0; }
+  .hours-list li { display: flex; justify-content: space-between; font-size: 0.92rem; padding-bottom: 12px; border-bottom: 1px solid #FFE0D2; }
+  .hours-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .hours-list .day { color: #5A3E36; font-weight: 600; }
+  .hours-list .time { color: #2D1810; font-weight: 700; }
+  .open-now { margin-top: 20px; background: rgba(230, 81, 0, 0.08); border: 1px solid rgba(230, 81, 0, 0.25); border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; color: #8C2B08; font-weight: 700; }
+
+  /* Marble Light White Middle Page Sections */
+  .stats {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FAFAFC 50%, #F2F4F7 100%);
+    padding: 50px 6%;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+    border-top: 1px solid #EAECEF; border-bottom: 1px solid #EAECEF;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
+  }
+  .stat { text-align: center; color: var(--text-dark); }
+  .stat-number { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 800; color: #E65100; display: block; text-shadow: 0 2px 10px rgba(230, 81, 0, 0.12); }
+  .stat-label { font-size: 0.9rem; color: #5F6B7A; font-weight: 700; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  .pet-3d-section {
+    padding: 60px 6%;
+    background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #FAFAFD 60%, #F1F3F7 100%);
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid #EEF0F4;
+  }
+  .pet-3d-header { margin-bottom: 35px; }
+  .pet-3d-header h3 { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 800; color: #D84315; margin-bottom: 6px; }
+  .pet-3d-header p { color: #5F6B7A; font-size: 0.95rem; font-weight: 500; }
+
+  .pet-3d-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 28px;
+    perspective: 1000px;
+  }
+  .pet-3d-card {
+    background: var(--white);
+    border-radius: 24px;
+    padding: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    border: 2px solid #EAECEF;
+    transition: transform 0.15s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    position: relative;
+  }
+  .pet-3d-card:hover {
+    border-color: #E65100;
+    box-shadow: 0 20px 40px rgba(230, 81, 0, 0.18);
+  }
+  .pet-3d-card-inner {
+    transform-style: preserve-3d;
+  }
+  .pet-badge {
+    position: absolute;
+    top: 24px; right: 24px;
+    background: linear-gradient(135deg, #E65100, #FF7E5F);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateZ(40px);
+  }
+  .pet-3d-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 18px;
+    transition: transform 0.4s ease;
+    transform: translateZ(30px);
+  }
+  .pet-3d-card:hover .pet-3d-img {
+    transform: translateZ(55px) scale(1.05);
+  }
+  .pet-3d-info {
+    margin-top: 18px;
+    text-align: center;
+    transform: translateZ(25px);
+  }
+  .pet-3d-info h4 { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+  .pet-3d-info p { font-size: 0.85rem; color: #E65100; font-weight: 600; margin-bottom: 0; }
+
+  .services { padding: 90px 6%; background: linear-gradient(180deg, #FFFFFF 0%, #FAFAFD 100%); }
+  .section-label { font-size: 0.85rem; font-weight: 800; color: #E65100; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 800; color: var(--text-dark); margin-bottom: 14px; }
+  .section-sub { color: #5F6B7A; font-size: 1.05rem; max-width: 520px; line-height: 1.6; margin-bottom: 50px; }
+  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .service-card {
+    background: var(--white); border-radius: var(--radius); padding: 36px 30px;
+    border: 2px solid #EAECEF; transition: all 0.3s ease; position: relative; overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+  }
+  .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; background: linear-gradient(90deg, #E65100, #FF7E5F); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+  .service-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(230, 81, 0, 0.15); border-color: #FFCBB5; }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon { width: 58px; height: 58px; background: linear-gradient(135deg, #FFF3EB, #FFE6D8); border-radius: 16px; display: grid; place-items: center; font-size: 28px; margin-bottom: 22px; box-shadow: 0 4px 12px rgba(230, 81, 0, 0.12); }
+  .service-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--text-dark); margin-bottom: 12px; }
+  .service-card p { font-size: 0.92rem; color: #5F6B7A; line-height: 1.65; margin-bottom: 0; }
+
+  .booking {
+    background: linear-gradient(135deg, #F8F9FA 0%, #FAFAFD 50%, #F1F3F7 100%);
+    padding: 90px 6%;
+    border-top: 1px solid #EAECEF;
+    border-bottom: 1px solid #EAECEF;
+  }
+  .booking-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; max-width: 1150px; margin: 0 auto; }
+  .booking-info .section-title { color: var(--text-dark); }
+  .booking-info .section-sub { color: #5F6B7A; }
+  .feature-list { list-style: none; display: flex; flex-direction: column; gap: 16px; margin-top: 32px; padding-left: 0; }
+  .feature-list li { display: flex; align-items: center; gap: 14px; color: var(--text-dark); font-size: 1rem; font-weight: 600; }
+  .feature-list li::before { content: '✓'; width: 26px; height: 26px; background: #E65100; border-radius: 50%; display: grid; place-items: center; color: var(--white); font-size: 13px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 10px rgba(230,81,0,0.25); }
+  
+  .booking-form { background: var(--white); border-radius: 24px; padding: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.08); border: 2px solid #EAECEF; }
+  .booking-form h3 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--text-dark); margin-bottom: 24px; font-weight: 800; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .form-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-dark); }
+  .form-group input, .form-group select { padding: 12px 16px; border: 2px solid #EAECEF; border-radius: 12px; font-size: 0.95rem; font-family: 'Inter', sans-serif; color: var(--text-dark); transition: all 0.2s; outline: none; background: #FAFAFC; }
+  .form-group input:focus, .form-group select:focus { border-color: #E65100; box-shadow: 0 0 10px rgba(230, 81, 0, 0.15); background: #FFFFFF; }
+  .form-submit { width: 100%; background: linear-gradient(135deg, #E65100, #D84315); color: var(--white); padding: 16px; border-radius: 14px; font-size: 1.05rem; font-weight: 700; margin-top: 6px; box-shadow: 0 8px 20px rgba(230, 81, 0, 0.25); }
+
+  .video-clip-section {
+    position: relative;
+    width: 100%;
+    height: 65vh;
+    overflow: hidden;
+    background: #000;
+  }
+  .video-clip-section video {
+    width: 100%; height: 100%; object-fit: cover; opacity: 0.85;
+  }
+  .video-clip-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(230, 81, 0, 0.35), rgba(92, 29, 6, 0.5));
+    display: flex; align-items: center; justify-content: center; text-align: center; color: var(--white); padding: 20px;
+  }
+  .video-clip-overlay h2 {
+    font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+    text-shadow: 0 4px 25px rgba(0,0,0,0.6); font-weight: 800;
+  }
+
+  .marquee-ticker {
+    background: linear-gradient(90deg, #7A240A, #A83210, #8B250C);
+    color: var(--white); padding: 16px 0; overflow: hidden; white-space: nowrap; position: relative;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+  .marquee-track {
+    display: inline-block; animation: marqueeAnim 22s linear infinite;
+    font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; letter-spacing: 0.05em; text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  @keyframes marqueeAnim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  .team { padding: 90px 6%; background: linear-gradient(180deg, #FFFFFF 0%, #FAFAFD 100%); }
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+  .vet-card { background: var(--white); border-radius: var(--radius); overflow: hidden; border: 2px solid #EAECEF; transition: all 0.3s; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04); }
+  .vet-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(230, 81, 0, 0.15); border-color: #FFCBB5; }
+  .vet-avatar { height: 210px; display: flex; align-items: center; justify-content: center; font-size: 85px; position: relative; }
+  .vet-avatar.a { background: linear-gradient(135deg, #FFF3EB, #FFE6D8); }
+  .vet-avatar.b { background: linear-gradient(135deg, #FFE6D8, #FFD0B8); }
+  .vet-avatar.c { background: linear-gradient(135deg, #FFD0B8, #FFB495); }
+  .vet-info { padding: 26px; }
+  .vet-info h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); }
+  .vet-info .title { font-size: 0.88rem; color: #E65100; font-weight: 700; margin: 4px 0 12px; }
+  .vet-info p { font-size: 0.88rem; color: #5F6B7A; line-height: 1.6; margin-bottom: 0; }
+
+  .testimonials { padding: 90px 6%; background: linear-gradient(180deg, #FAFAFD 0%, #F3F4F8 100%); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .testi-card { background: var(--white); border-radius: var(--radius); padding: 32px; border: 2px solid #EAECEF; box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: all 0.3s; }
+  .testi-card:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(230, 81, 0, 0.15); border-color: #E65100; }
+  .stars { color: #E65100; font-size: 1.1rem; margin-bottom: 16px; }
+  .testi-card p { font-size: 0.95rem; color: var(--text-dark); line-height: 1.65; margin-bottom: 22px; font-weight: 400; }
+  .testi-author { display: flex; align-items: center; gap: 14px; }
+  .author-avatar { width: 44px; height: 44px; border-radius: 50%; font-size: 20px; display: grid; place-items: center; background: linear-gradient(135deg, #FFF3EB, #FFE6D8); box-shadow: 0 3px 8px rgba(0,0,0,0.08); }
+  .author-name { font-size: 0.92rem; font-weight: 700; color: var(--text-dark); }
+  .author-pet { font-size: 0.8rem; color: #E65100; font-weight: 600; }
+
+  /* Dark Orange Brown Red Mix Footer */
+  .emergency {
+    background: linear-gradient(135deg, #8B250C 0%, #A83210 50%, #681C09 100%);
+    padding: 60px 6%;
+    display: flex; align-items: center; justify-content: space-between; gap: 30px; flex-wrap: wrap;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.15);
+  }
+  .emergency-text h2 { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--white); margin-bottom: 8px; font-weight: 800; }
+  .emergency-text p { color: #FFDAC8; font-size: 1rem; font-weight: 500; }
+  .emergency-phone { font-family: 'Playfair Display', serif; font-size: 2.4rem; color: #FFC4A8; font-weight: 800; }
+  .emergency-phone span { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 700; display: block; color: var(--white); text-transform: uppercase; letter-spacing: 0.05em; }
+  .btn-white { background: var(--white); color: #8B250C; padding: 14px 32px; border-radius: 12px; font-size: 1rem; font-weight: 800; box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+
+  footer {
+    background: linear-gradient(140deg, #2E0B05 0%, #5C1908 30%, #7E220A 60%, #4D1407 85%, #240703 100%);
+    padding: 70px 6% 35px;
+    color: #FFDAC8;
+  }
+  .footer-top { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+  .footer-brand p { color: #E0B4A4; font-size: 0.9rem; line-height: 1.7; margin-top: 16px; max-width: 300px; }
+  .footer-col h4 { color: #FFC4A8; font-size: 0.95rem; font-weight: 700; margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; padding-left: 0; }
+  .footer-col ul a { color: #FFDAC8; text-decoration: none; font-size: 0.88rem; transition: color 0.2s; font-weight: 500; }
+  .footer-col ul a:hover { color: #FFFFFF; text-shadow: 0 0 8px rgba(255, 196, 168, 0.6); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.15); padding-top: 26px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { color: #E0B4A4; font-size: 0.85rem; margin-bottom: 0; }
+
+  @media (max-width: 900px) {
+    .hero { flex-direction: column; padding-top: 130px; }
+    .hero-card { flex: none; width: 100%; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .services-grid, .team-grid, .testi-grid { grid-template-columns: 1fr 1fr; }
+    .booking-inner { grid-template-columns: 1fr; gap: 40px; }
+    .footer-top { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 560px) {
+    .services-grid, .team-grid, .testi-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .emergency { flex-direction: column; text-align: center; }
+    .footer-top { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <div class="logo-icon">🐾</div>
+    <span class="logo-text">PawCare Clinic</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#team">Our Vets</a></li>
+    <li><a href="#booking">Book Visit</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Book Appointment</button>
+</nav>
+
+<section class="hero">
+  <div class="hero-carousel-bg">
+    <div id="heroCarousel" class="carousel slide carousel-fade h-100" data-bs-ride="carousel" data-bs-interval="3000">
+      <div class="carousel-inner h-100">
+        <div class="carousel-item active h-100">
+          <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1920&q=80" alt="Vet examining cat">
+        </div>
+        <div class="carousel-item h-100">
+          <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1920&q=80" alt="Vet with ginger cat">
+        </div>
+        <div class="carousel-item h-100">
+          <img src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?auto=format&fit=crop&w=1920&q=80" alt="Vet holding cat with stethoscope">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      <span id="clinic-status">Open Now — Accepting Walk-ins</span>
+    </div>
+    <h1>Where Every Pet Gets <em>Warm Loving Care</em> 🐾</h1>
+    <p>Compassionate veterinary care for your beloved furry family members. High-energy care, joyful vibes, and world-class treatments!</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="document.getElementById('booking').scrollIntoView({behavior:'smooth'})">Book an Appointment</button>
+      <button class="btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Explore Services</button>
+    </div>
+  </div>
+
+  <div class="hero-card">
+    <h3>Today's Hours</h3>
+    <ul class="hours-list">
+      <li><span class="day">Monday – Friday</span><span class="time">8:00 AM – 8:00 PM</span></li>
+      <li><span class="day">Saturday</span><span class="time">9:00 AM – 6:00 PM</span></li>
+      <li><span class="day">Sunday</span><span class="time">10:00 AM – 4:00 PM</span></li>
+      <li><span class="day">Emergency Line</span><span class="time">24 / 7</span></li>
+    </ul>
+    <div class="open-now">
+      <span class="live-dot"></span>
+      <span id="live-time">Clinic is open right now</span>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stat"><span class="stat-number" data-target="4800">0</span><span class="stat-label">Happy Patients</span></div>
+  <div class="stat"><span class="stat-number" data-target="12">0</span><span class="stat-label">Specialist Vets</span></div>
+  <div class="stat"><span class="stat-number" data-target="16">0</span><span class="stat-label">Years of Service</span></div>
+  <div class="stat"><span class="stat-number" data-target="98">0</span><span class="stat-label">% Client Satisfaction</span></div>
+</section>
+
+<section class="pet-3d-section">
+  <div class="pet-3d-header">
+    <h3>🐾 Meet Our Happy Patients</h3>
+    <p>Hover over the cards to see our adorable furry friends pop out in 3D!</p>
+  </div>
+  <div class="pet-3d-grid">
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Playful Pup</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=600&q=80" alt="Cute Beagle" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Charlie the Beagle</h4>
+          <p>Regular Wellness Champ 🏆</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐱 Fluffy Whiskers</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=600&q=80" alt="Fluffy Cat" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Luna the Persian</h4>
+          <p>Dental Care Superstar ⭐</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Happy Frenchie</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=600&q=80" alt="French Bulldog" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Milo the Bulldog</h4>
+          <p>Vaccination Complete 💉</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <p class="section-label">What We Offer</p>
+  <h2 class="section-title">Complete Care Under One Roof</h2>
+  <p class="section-sub">From preventive wellness to complex surgeries, our team is equipped to care for dogs, cats, birds, and exotic pets with warmth & excitement!</p>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🩺</div>
+      <h3>General Check-ups</h3>
+      <p>Regular wellness exams to keep your pet healthy and catch any concerns early before they become serious.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">💉</div>
+      <h3>Vaccinations</h3>
+      <p>Complete vaccination schedules for puppies, kittens, and adult pets — protecting them against common diseases.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🔬</div>
+      <h3>Diagnostics & Lab</h3>
+      <p>In-house blood work, urinalysis, X-rays, and ultrasound for fast, accurate results without the wait.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🏥</div>
+      <h3>Surgery</h3>
+      <p>Spay, neuter, and soft tissue surgical procedures performed by board-certified surgeons with full anesthesia monitoring.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🦷</div>
+      <h3>Dental Care</h3>
+      <p>Professional cleaning, tooth extractions, and oral health assessments to keep your pet's mouth in great shape.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🚨</div>
+      <h3>Emergency Care</h3>
+      <p>Our emergency line is available 24/7. For life-threatening situations, our on-call vets are always ready.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pet-3d-section">
+  <div class="pet-3d-header">
+    <h3>🐈 Lovely Cats & Dogs Corner</h3>
+    <p>3D animated hover effect showcasing our healthy diagnostic patients!</p>
+  </div>
+  <div class="pet-3d-grid">
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐱 Curious Ginger</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&w=600&q=80" alt="Ginger Kitten" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Simba the Kitten</h4>
+          <p>First Vaccination Hero 🥇</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Golden Joy</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=600&q=80" alt="Golden Retriever Puppy" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Max the Golden</h4>
+          <p>Nutritional Consultation 🍖</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐱 Cool Cat</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?auto=format&fit=crop&w=600&q=80" alt="Cool Cat" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Felix the Boss</h4>
+          <p>Surprise Check-up Star 😎</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="booking" id="booking">
+  <div class="booking-inner">
+    <div class="booking-info">
+      <p class="section-label">Easy Scheduling</p>
+      <h2 class="section-title">Book Your Pet's Visit in Minutes</h2>
+      <p class="section-sub">No waiting on hold. Choose your vet, pick a time, and we'll confirm via SMS or email.</p>
+      <ul class="feature-list">
+        <li>Instant confirmation via SMS or email</li>
+        <li>Choose your preferred veterinarian</li>
+        <li>Reminder sent 24 hours before your visit</li>
+        <li>Easy rescheduling anytime</li>
+      </ul>
+    </div>
+    <div class="booking-form">
+      <h3>Schedule an Appointment 🐾</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="John Smith">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+1 (555) 234-5678">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Pet's Name</label>
+          <input type="text" placeholder="Bruno">
+        </div>
+        <div class="form-group">
+          <label>Pet Type</label>
+          <select>
+            <option>Dog</option>
+            <option>Cat</option>
+            <option>Bird</option>
+            <option>Rabbit</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Service Needed</label>
+          <select>
+            <option>General Check-up</option>
+            <option>Vaccination</option>
+            <option>Dental Care</option>
+            <option>Surgery Consult</option>
+            <option>Lab & Diagnostics</option>
+            <option>Emergency</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Preferred Date</label>
+          <input type="date">
+        </div>
+      </div>
+      <button class="form-submit" onclick="this.textContent='✓ Appointment Requested!'; this.style.background='#D84315';">Confirm Appointment</button>
+    </div>
+  </div>
+</section>
+
+<section class="pet-3d-section">
+  <div class="pet-3d-header">
+    <h3>🐶 Smiling Paws Community</h3>
+    <p>Interactive 3D depth cards — Move your mouse over to inspect!</p>
+  </div>
+  <div class="pet-3d-grid">
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Outdoor Buddy</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=600&q=80" alt="Playful Dog" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Rocky the Explorer</h4>
+          <p>Orthopedic Check Done 🦴</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐱 Tabby Love</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&w=600&q=80" alt="Ginger Tabby" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Mimi the Tabby</h4>
+          <p>Grooming & Spa Day ✨</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Fluffy Cuteness</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1561037404-61cd46aa615b?auto=format&fit=crop&w=600&q=80" alt="Fluffy Puppy" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Teddy the Pomeranian</h4>
+          <p>Puppy Wellness Plan 🎾</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="video-clip-section">
+  <video autoplay muted loop playsinline>
+    <source src="https://assets.mixkit.co/videos/preview/mixkit-young-woman-playing-with-her-dog-on-a-sofa-41584-large.mp4" type="video/mp4">
+  </video>
+  <div class="video-clip-overlay">
+    <h2>Happy Pets, Happy Owners 🐾</h2>
+  </div>
+</div>
+
+<div class="marquee-ticker">
+  <div class="marquee-track">
+    🐾 Lively Warm Pet Care &nbsp;&nbsp;&bull;&nbsp;&nbsp; Compassionate Treatment &nbsp;&nbsp;&bull;&nbsp;&nbsp; 24/7 Emergency Support &nbsp;&nbsp;&bull;&nbsp;&nbsp; Expert Veterinary Team &nbsp;&nbsp;&bull;&nbsp;&nbsp; 3D Interactive Care &nbsp;&nbsp;&bull;&nbsp;&nbsp; Lively Warm Pet Care &nbsp;&nbsp;&bull;&nbsp;&nbsp; Compassionate Treatment &nbsp;&nbsp;&bull;&nbsp;&nbsp; 24/7 Emergency Support &nbsp;&nbsp;&bull;&nbsp;&nbsp; Expert Veterinary Team &nbsp;&nbsp;&bull;&nbsp;&nbsp; 3D Interactive Care &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+  </div>
+</div>
+
+<section class="team" id="team">
+  <p class="section-label">Our Specialists</p>
+  <h2 class="section-title">Meet the Vets Behind the Care</h2>
+  <p class="section-sub">Board-certified, experienced, and genuinely passionate about animal health.</p>
+  <div class="team-grid">
+    <div class="vet-card">
+      <div class="vet-avatar a">👩‍⚕️</div>
+      <div class="vet-info">
+        <h3>Dr. Sarah Jenkins</h3>
+        <p class="title">Chief Veterinarian — Small Animals</p>
+        <p>12 years specializing in canine and feline internal medicine. Known for her calm approach with anxious pets.</p>
+      </div>
+    </div>
+    <div class="vet-card">
+      <div class="vet-avatar b">👨‍⚕️</div>
+      <div class="vet-info">
+        <h3>Dr. James Wilson</h3>
+        <p class="title">Surgeon & Emergency Specialist</p>
+        <p>Surgical expertise in orthopedics and soft tissue. First call when things get serious — always composed under pressure.</p>
+      </div>
+    </div>
+    <div class="vet-card">
+      <div class="vet-avatar c">👩‍⚕️</div>
+      <div class="vet-info">
+        <h3>Dr. Jessica Taylor</h3>
+        <p class="title">Exotic & Avian Veterinarian</p>
+        <p>Specializes in birds, reptiles, and small mammals. One of very few certified exotic pet vets in the region.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pet-3d-section">
+  <div class="pet-3d-header">
+    <h3>🐱 Special Care for Every Breed</h3>
+    <p>Dynamic 3D hover effects — Our beloved patients after successful treatments!</p>
+  </div>
+  <div class="pet-3d-grid">
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐱 Cozy Sleeping Cat</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&w=600&q=80" alt="Cozy Cat" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Oliver the Sleeping Beauty</h4>
+          <p>Post-Operation Recovery Complete 💤</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Husky Power</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1605568427561-40dd23c2acea?auto=format&fit=crop&w=600&q=80" alt="Siberian Husky" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Koda the Husky</h4>
+          <p>Annual Check-up Hero 🐺</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐱 Fluffy Ragdoll</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1561948955-570b270e7c36?auto=format&fit=crop&w=600&q=80" alt="Ragdoll Cat" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Bella the Ragdoll</h4>
+          <p>Microchipped & Safe 📍</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <p class="section-label">Client Stories</p>
+  <h2 class="section-title">Trusted by Pet Families Across the USA</h2>
+  <p class="section-sub">Don't just take our word for it — here's what our clients say.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>Dr. Sarah is incredible. My dog Bruno has severe anxiety at the vet but she handled him so gently. The whole experience was smooth and stress-free for both of us.</p>
+      <div class="testi-author">
+        <div class="author-avatar">🧑</div>
+        <div>
+          <div class="author-name">Matthew Johnson</div>
+          <div class="author-pet">Bruno — Golden Retriever</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>My cat needed emergency surgery at midnight. PawCare picked up immediately and had her in the OR within 30 minutes. She's fully recovered now. I can't thank them enough.</p>
+      <div class="testi-author">
+        <div class="author-avatar">👩</div>
+        <div>
+          <div class="author-name">Jennifer Adams</div>
+          <div class="author-pet">Mochi — Persian Cat</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="stars">★★★★★</div>
+      <p>They're one of the only clinics in the region that actually know exotic birds. Dr. Jessica diagnosed my cockatiel's issue in minutes when three other vets had no idea.</p>
+      <div class="testi-author">
+        <div class="author-avatar">🧔</div>
+        <div>
+          <div class="author-name">Christopher Evans</div>
+          <div class="author-pet">Kiwi — Cockatiel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pet-3d-section">
+  <div class="pet-3d-header">
+    <h3>🐶 Loved By Pets & Owners</h3>
+    <p>3D hover animation — Happy tail-wagging moments captured at our clinic!</p>
+  </div>
+  <div class="pet-3d-grid">
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Corgi Smile</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=600&q=80" alt="Cute Corgi" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Waffles the Corgi</h4>
+          <p>Physical Therapy Champ 🏆</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐱 Playful Kitten</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?auto=format&fit=crop&w=600&q=80" alt="Playful Kitten" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Nala the Kitten</h4>
+          <p>Weight & Nutrition Check 🐾</p>
+        </div>
+      </div>
+    </div>
+    <div class="pet-3d-card">
+      <div class="pet-badge">🐶 Shiba Inu Smile</div>
+      <div class="pet-3d-card-inner">
+        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=600&q=80" alt="Shiba Inu" class="pet-3d-img">
+        <div class="pet-3d-info">
+          <h4>Kiko the Shiba</h4>
+          <p>Ear & Eye Check Completed 🌟</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="emergency" id="contact">
+  <div class="emergency-text">
+    <h2>Pet Emergency? We're Always Here 🐾</h2>
+    <p>Our emergency line operates around the clock — because animals can't wait.</p>
+  </div>
+  <div class="emergency-phone">
+    +1 (800) 555-PAWS
+    <span>24/7 Emergency Helpline</span>
+  </div>
+  <button class="btn-white">Call Now</button>
+</section>
+
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-icon">🐾</div>
+        <span class="logo-text" style="color:#FFC4A8;">PawCare Clinic</span>
+      </div>
+      <p>Providing compassionate, expert veterinary care to pets across the United States since 2008. Every animal deserves to feel better and be loved!</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul>
+        <li><a href="#">Check-ups</a></li>
+        <li><a href="#">Vaccinations</a></li>
+        <li><a href="#">Surgery</a></li>
+        <li><a href="#">Dental</a></li>
+        <li><a href="#">Lab & Diagnostics</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Clinic</h4>
+      <ul>
+        <li><a href="#">Our Team</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">info@pawcareclinic.com</a></li>
+        <li><a href="#">+1 (555) 234-5678</a></li>
+        <li><a href="#">450 E 4th St, Austin, TX 78701, USA</a></li>
+        <li><a href="#">Get Directions</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 PawCare Veterinary Clinic. All rights reserved.</p>
+    <p style="color:#FFC4A8; font-size:0.88rem; font-weight:700;">Made with 🐾 for pet lovers</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  function updateLiveTime() {
+    const now = new Date();
+    const h = now.getHours(), m = now.getMinutes();
+    const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    const day = now.getDay();
+    let isOpen = false;
+    if (day >= 1 && day <= 5 && h >= 8 && h < 20) isOpen = true;
+    if (day === 6 && h >= 9 && h < 18) isOpen = true;
+    if (day === 0 && h >= 10 && h < 16) isOpen = true;
+    const liveEl = document.getElementById('live-time');
+    const statusEl = document.getElementById('clinic-status');
+    if (liveEl) liveEl.textContent = isOpen ? `Clinic is open right now — ${time}` : `Clinic is currently closed — ${time}`;
+    if (statusEl) statusEl.textContent = isOpen ? 'Open Now — Accepting Walk-ins' : 'Currently Closed — Emergency Line Active';
+  }
+  updateLiveTime();
+  setInterval(updateLiveTime, 30000);
+
+  function animateCounter(el) {
+    const target = parseInt(el.dataset.target);
+    const duration = 1800;
+    const start = performance.now();
+    function step(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target).toLocaleString() + (target === 98 ? '%' : target >= 1000 ? '+' : '+');
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const statsSection = document.querySelector('.stats');
+  let counted = false;
+  const observer = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !counted) {
+      counted = true;
+      document.querySelectorAll('.stat-number').forEach(animateCounter);
+    }
+  }, { threshold: 0.4 });
+  if (statsSection) observer.observe(statsSection);
+
+  const dateInput = document.querySelector('input[type="date"]');
+  if (dateInput) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    dateInput.value = today;
+  }
+
+  document.querySelectorAll('.pet-3d-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -16;
+      const rotateY = ((x - centerX) / centerX) * 16;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    });
+  });
+</script>
+</body>
+</html>
